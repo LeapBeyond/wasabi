@@ -1,29 +1,19 @@
 #!/bin/bash
+echo "======== configuring ========"
 
 cd `dirname $0`
-[[ -s ./env.rc ]] && source ./env.rc
+[[ -s ./env.rc ]] || exit 1
 
-# echo "======= setting up key pair ======="
-# aws --profile $AWS_PROFILE ec2 describe-key-pairs --output text --key-name $BASE_NAME >/dev/null 2>&1
-# if [ $? -gt 0 ]
-# then
-#   aws --profile $AWS_PROFILE ec2 create-key-pair --key-name $BASE_NAME --query 'KeyMaterial' | sed -e 's/^"//' -e 's/"$//' -e's/\\n/\
-# /g'> data/$BASE_NAME.pem
-#   chmod 400 data/$BASE_NAME.pem
-# fi
-# aws ec2 describe-key-pairs --output text --key-name $BASE_NAME
+source ./env.rc
+
+# setup tfvars to avoid need to pass things on the terraform command line
+sed -e 's/^export //' -e's/=/="/' -e's/$/"/' ./env.rc | tr '[:upper:]' '[:lower:]' > terraform/terraform.tfvars
+
+echo "======== building Wasabi ========"
+wasabi/setup.sh -p $WASABI_PROFILE -r $WASABI_REGION -b $WASABI_BUCKET
 
 echo "======== applying terraform ========"
 cd terraform
 terraform init
-terraform apply -auto-approve \
-  -var "aws_region=$AWS_REGION" \
-  -var "aws_profile=$AWS_PROFILE"
+terraform apply -auto-approve
 cd ..
-
-# echo "======== populating buckets ========"
-#
-# for BUCKET in $(aws --profile $AWS_PROFILE s3api list-buckets --output table --query 'Buckets[*].Name' | grep $BASE_NAME | sed -e 's/ //g' -e 's/|//g')
-# do
-#   aws --profile $AWS_PROFILE s3 cp data/test.txt s3://$BUCKET/test.txt
-# done

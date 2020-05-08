@@ -1,5 +1,5 @@
 terraform {
-  backend "s3" {
+  backend s3 {
     bucket         = "lbatrain20200428162949619600000001"
     key            = "wasabi"
     region         = "eu-west-2"

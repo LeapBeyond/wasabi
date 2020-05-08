@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # s3 dropbox bucket
 # -----------------------------------------------------------------------------
-resource "aws_s3_bucket" "dropbox" {
+resource aws_s3_bucket dropbox {
   bucket_prefix = var.base_name
   acl           = "private"
   region        = var.aws_region
@@ -20,7 +20,8 @@ resource "aws_s3_bucket" "dropbox" {
   tags = merge({ "Name" = "dropbox" }, var.tags)
 }
 
-resource "aws_s3_account_public_access_block" "dropbox" {
+resource aws_s3_bucket_public_access_block dropbox {
+  bucket                  = aws_s3_bucket.dropbox.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -30,7 +31,7 @@ resource "aws_s3_account_public_access_block" "dropbox" {
 # -----------------------------------------------------------------------------
 # s3 thumbnails bucket
 # -----------------------------------------------------------------------------
-resource "aws_s3_bucket" "thumbnails" {
+resource aws_s3_bucket thumbnails {
   bucket_prefix = var.base_name
   acl           = "private"
   region        = var.aws_region
@@ -41,7 +42,8 @@ resource "aws_s3_bucket" "thumbnails" {
   tags = merge({ "Name" = "thumbnails" }, var.tags)
 }
 
-resource "aws_s3_account_public_access_block" "thumbnails" {
+resource aws_s3_bucket_public_access_block thumbnails {
+  bucket                  = aws_s3_bucket.thumbnails.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true

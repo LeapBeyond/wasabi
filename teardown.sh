@@ -1,25 +1,19 @@
 #!/bin/bash
 
 cd `dirname $0`
-[[ -s ./env.rc ]] && source ./env.rc
-
-
-echo "======== emptying buckets ========"
-
-# for BUCKET in $(aws --profile $AWS_PROFILE s3api list-buckets --output table --query 'Buckets[*].Name' | grep $BASE_NAME | sed -e 's/ //g' -e 's/|//g')
-# do
-#   aws --profile $AWS_PROFILE s3 rm s3://$BUCKET --recursive
-# done
+[[ -s ./env.rc ]] || exit 1
+source ./env.rc
 
 echo "======= terraform destroy ======="
 
 cd terraform
 terraform init
-terraform destroy -force \
-  -var "aws_region=$AWS_REGION" \
-  -var "aws_profile=$AWS_PROFILE"
+terraform destroy -force
+
 cd ..
 
-# echo "======= removing key pair ======="
-# aws --profile $AWS_PROFILE ec2 delete-key-pair --key-name $BASE_NAME > /dev/null 2>&1
-# rm -f data/$BASE_NAME.pem > /dev/null 2>&1
+echo "======== destroying Wasabi ========"
+wasabi/teardown.sh -p $WASABI_PROFILE -r $WASABI_REGION -b $WASABI_BUCKET
+
+echo "======== tidying up ========"
+rm -f terraform/terraform.tfvars 2>/dev/null

@@ -2,6 +2,7 @@
 **/.terraform/*
 **/env.rc
 **/terraform.tfvars
+**/*.zip
 
 data
 notes

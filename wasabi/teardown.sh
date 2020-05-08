@@ -1,0 +1,42 @@
+#!/bin/bash
+
+cd `dirname $0`
+
+usage() {
+  echo "Usage: $0 -p <profile> -r <region> -b <bucket>" 1>&2
+  exit 1
+}
+
+while getopts ":p:r:b:" o; do
+    case "${o}" in
+        p) PROFILE=${OPTARG}
+            ;;
+        r) REGION=${OPTARG}
+            ;;
+        b) NAME=${OPTARG}
+            ;;
+        *) usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+if [ -z "${PROFILE}" ] || [ -z "${REGION}" ] || [ -z "${NAME}" ]
+then
+    usage
+fi
+
+#
+# see https://jmespath.org/tutorial.html for information on query syntax
+#
+COUNT=$(aws --profile ${PROFILE} --endpoint-url=https://s3.${REGION}.wasabisys.com --output json \
+  s3api list-buckets \
+  --query "length(Buckets[?Name=='"${NAME}"'])"
+  )
+
+if [[ $COUNT -gt 0 ]]
+then
+  echo "===> deleting ${NAME}"
+  aws --profile ${PROFILE} --endpoint-url=https://s3.${REGION}.wasabisys.com \
+      s3api delete-bucket --region ${REGION} --bucket ${NAME}
+fi
