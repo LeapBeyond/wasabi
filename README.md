@@ -6,6 +6,8 @@ The project creates a simplified system for creating thumbnails of photos and ar
 bucket and "thumbnail" bucket on AWS, and an "archive" bucket on Wasabi. When image files are added to the right place in the
 dropbox bucket, [AWS Lambda](https://aws.amazon.com/lambda/) code is invoked to create the thumbnail, and move the original image to the archive bucket on Wasabi.
 
+Parts of this project are derived from <https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html>
+
 Please note this is just a sketch, and several key pieces of work remain undone:
 
   - the permissions model for the buckets is rudimentary
@@ -33,7 +35,11 @@ In order to create the infrastructure, you first must create the Lambda ZIP file
 
 ### Create the Python ZIP
 The image manipulation library used to create the thumbnail is quite fussy about where it is installed, and it turns out in order
-to use it from AWS Lambda we need to assemble the ZIP file on an Amazon Linux 2 EC2 instance. Here is how I proceeded:
+to use it from AWS Lambda we need to assemble the ZIP file on an Amazon Linux 2 EC2 instance.
+
+Please see <  https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example-deployment-pkg.html#with-s3-example-deployment-pkg-python> for more information on this.
+
+Here is how I proceeded:
 
 First I created an Amazon Linux 2 EC2 instance, choosing a tiny instance with minimal storage, configured to allow SSH from my desktop. I connected with SSH, then setup a python project there (note that we need Python 3.7 installed on the instance):
 
