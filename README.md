@@ -95,7 +95,22 @@ export WASABI_BUCKET=photoarchive
 | WASABI_PROFILE | profile used for access to Wasabi                               |
 | WASABI_BUCKET  | name of the archive bucket to create in Wasabi                  |
 
+
+### Create Secrets
+
+You will need to add your Wasabi access_key / secret_key pair to AWS Secrets Manager so that the Lambda can send files to Wasabi:
+
+  1. login to the AWS console and navigate to Secrets Manager
+  2. select "Store a new secret"
+  3. specify "other types of secrets"
+  4. add two key/value pairs, with keys `WASABI_ACCESS` and `WASABI_SECRET`
+  5. use default encryption and other default configuration options
+  6. name the secret `demo/wasabi/access`
+
+Note that if you want to name the secret differently, you will need to update `lambda/variables.tf` to record the different name.
+
 ### Create Assets
+
 To create the assets, simply execute `setup.sh` from the top directory of the project:
 
 ```
