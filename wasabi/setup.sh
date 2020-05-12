@@ -26,6 +26,8 @@ then
     usage
 fi
 
+unset AWS_REGION AWS_PROFILE AWS_ACCOUNT
+
 #
 # see https://jmespath.org/tutorial.html for information on query syntax
 #

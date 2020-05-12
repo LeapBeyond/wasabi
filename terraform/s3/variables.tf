@@ -8,6 +8,12 @@ variable base_name {
   default     = "photos"
 }
 
+variable thumb_name {
+  description = "prefix used for most thumbnail assets"
+  type        = string
+  default     = "thumbs"
+}
+
 # -----------------------------------------------------------------------------
 # injected parameters
 # -----------------------------------------------------------------------------

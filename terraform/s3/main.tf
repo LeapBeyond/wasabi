@@ -32,7 +32,7 @@ resource aws_s3_bucket_public_access_block dropbox {
 # s3 thumbnails bucket
 # -----------------------------------------------------------------------------
 resource aws_s3_bucket thumbnails {
-  bucket_prefix = var.base_name
+  bucket_prefix = var.thumb_name
   acl           = "private"
   region        = var.aws_region
 

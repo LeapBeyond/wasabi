@@ -26,13 +26,13 @@ then
     usage
 fi
 
+unset AWS_REGION AWS_PROFILE AWS_ACCOUNT
 #
 # see https://jmespath.org/tutorial.html for information on query syntax
 #
-COUNT=$(aws --profile ${PROFILE} --endpoint-url=https://s3.${REGION}.wasabisys.com --output json \
-  s3api list-buckets \
-  --query "length(Buckets[?Name=='"${NAME}"'])"
-  )
+COUNT=$(aws --profile ${PROFILE} --endpoint-url=https://s3.${REGION}.wasabisys.com --output json  \
+    s3api list-buckets \
+    --query "length(Buckets[?Name=='"${NAME}"'])" )
 
 if [[ $COUNT -gt 0 ]]
 then
